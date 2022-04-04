@@ -1,0 +1,8 @@
+database:
+  url: ''
+  username: ''
+  passwrod: ''
+  dataSourceProperties:
+    cachePrepStmts: 'true'
+    prepStmtCacheSize: '250'
+    prepStmtCacheSqlLimit: '2048'

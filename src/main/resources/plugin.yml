@@ -1,0 +1,5 @@
+name: minecraft-horses
+version: 1.0-SNAPSHOT
+main: me.tuskdev.horses.HorsesPlugin
+commands:
+  horse: {}
