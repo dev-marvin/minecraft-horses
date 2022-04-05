@@ -49,7 +49,7 @@ public class SpawnHorseCommand implements CommandExecutor, TabCompleter {
         horse.setHealth(horse.getMaxHealth());
         horse.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(HorseUtil.getSpeed(horse));
         horse.getAttribute(Attribute.HORSE_JUMP_STRENGTH).setBaseValue(HorseUtil.getJump(horse));
-        horse.setCustomName(String.format("§e%s | %,.2f", HorseUtil.getName(horse), horse.getHealth()));
+        horse.setCustomName(String.format("§e%s | ❤ %,.2f", HorseUtil.getName(horse), horse.getHealth()));
         horse.setCustomNameVisible(true);
 
         player.sendMessage("§eYay! The horse has spawned.");

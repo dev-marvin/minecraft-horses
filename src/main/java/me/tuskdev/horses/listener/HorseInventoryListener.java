@@ -18,10 +18,10 @@ public class HorseInventoryListener implements Listener {
 
     @EventHandler
     public void onOpenInventory(InventoryOpenEvent event) {
-        if (event.getInventory() instanceof HorseInventory) {
-            event.setCancelled(true);
-            viewFrame.open(HorseInventoryView.class, (Player) event.getPlayer());
-        }
+        if (!(event.getInventory() instanceof HorseInventory)) return;
+
+        event.setCancelled(true);
+        if (event.getPlayer().getVehicle() != null) viewFrame.open(HorseInventoryView.class, (Player) event.getPlayer());
     }
 
 }

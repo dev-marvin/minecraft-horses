@@ -9,7 +9,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class HorseNameListener implements Listener {
 
@@ -21,7 +20,7 @@ public class HorseNameListener implements Listener {
         if (itemStack == null || itemStack.getType() != Material.NAME_TAG) return;
 
         Horse horse = (Horse) event.getRightClicked();
-        horse.setCustomName(String.format("§e%s | %,.2f", itemStack.getItemMeta().getDisplayName(), horse.getHealth()));
+        horse.setCustomName(String.format("§e%s | ❤ %,.2f", itemStack.getItemMeta().getDisplayName(), horse.getHealth()));
         horse.setCustomNameVisible(true);
     }
 
@@ -30,7 +29,7 @@ public class HorseNameListener implements Listener {
         if (event.getEntityType() != EntityType.HORSE) return;
 
         Horse horse = (Horse) event.getEntity();
-        horse.setCustomName(String.format("§e%s | %,.2f", HorseUtil.getName(horse), horse.getHealth()));
+        horse.setCustomName(String.format("§e%s | ❤ %,.2f", HorseUtil.getName(horse), horse.getHealth()));
         horse.setCustomNameVisible(true);
     }
 

@@ -1,5 +1,6 @@
 package me.tuskdev.horses.task;
 
+import me.tuskdev.horses.util.HorseUtil;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.EntityType;
@@ -25,7 +26,7 @@ public class ActionInfoTask implements Runnable {
             }
 
             Horse horse = (Horse) player.getVehicle();
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(String.format("§e%s | ❤ %,.2f", horse.getCustomName() == null ? "No Name" : horse.getCustomName(), horse.getHealth())));
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(String.format("§e%s | ❤ %,.2f", HorseUtil.getName(horse), horse.getHealth())));
         }
     }
 
