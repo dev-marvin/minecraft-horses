@@ -3,6 +3,7 @@ package me.tuskdev.horses;
 import me.tuskdev.horses.cache.CustomHorseCache;
 import me.tuskdev.horses.command.SpawnHorseCommand;
 import me.tuskdev.horses.controller.CustomHorseController;
+import me.tuskdev.horses.controller.DeathHorseController;
 import me.tuskdev.horses.inventory.ViewFrame;
 import me.tuskdev.horses.listener.*;
 import me.tuskdev.horses.task.ActionInfoTask;
@@ -25,16 +26,17 @@ public class HorsesPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         CustomHorseController customHorseController = new CustomHorseController(pooledConnection);
+        DeathHorseController deathHorseController = new DeathHorseController(pooledConnection);
         CustomHorseCache customHorseCache = new CustomHorseCache(customHorseController);
 
         ViewFrame viewFrame = new ViewFrame(this);
-        viewFrame.register(new HorseInventoryView(customHorseCache, customHorseController), new ResurrectionInventoryView(customHorseController));
+        viewFrame.register(new HorseInventoryView(customHorseCache, customHorseController), new ResurrectionInventoryView(customHorseController, deathHorseController));
 
         ActionInfoTask actionInfoTask = new ActionInfoTask();
         Bukkit.getScheduler().runTaskTimerAsynchronously(this, actionInfoTask, 0L, 20L);
 
         Bukkit.getPluginManager().registerEvents(new CitizensListener(viewFrame), this);
-        Bukkit.getPluginManager().registerEvents(new HorseDeathListener(customHorseCache, customHorseController), this);
+        Bukkit.getPluginManager().registerEvents(new HorseDeathListener(customHorseCache, customHorseController, deathHorseController), this);
         Bukkit.getPluginManager().registerEvents(new HorseInventoryListener(viewFrame), this);
         Bukkit.getPluginManager().registerEvents(new HorseMountListener(actionInfoTask, customHorseCache, customHorseController), this);
         Bukkit.getPluginManager().registerEvents(new HorseNameListener(), this);

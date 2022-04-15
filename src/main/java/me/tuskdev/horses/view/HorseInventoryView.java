@@ -132,6 +132,8 @@ public class HorseInventoryView extends View {
         customHorse.setLife(customHorse.getLife()+1);
         horse.setMaxHealth(HorseUtil.getHealth(horse) + customHorse.getLife()*2);
         horse.setHealth(horse.getMaxHealth());
+        horse.setCustomName(String.format("§e%s | ❤ %,.2f", HorseUtil.getName(horse), horse.getHealth()));
+        horse.setCustomNameVisible(true);
 
         player.setLevel(level-cost);
 

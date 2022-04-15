@@ -6,9 +6,12 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ForkJoinPool;
 
 public class PooledConnection {
 
+    private final ExecutorService EXECUTOR = new ForkJoinPool(Runtime.getRuntime().availableProcessors());
     private final HikariDataSource hikariDataSource;
 
     PooledConnection(ConfigurationSection configurationSection) {
@@ -24,6 +27,10 @@ public class PooledConnection {
 
     public Connection getConnection() throws SQLException {
         return hikariDataSource.getConnection();
+    }
+
+    public void async(Runnable runnable) {
+        EXECUTOR.submit(runnable);
     }
 
     void close() {

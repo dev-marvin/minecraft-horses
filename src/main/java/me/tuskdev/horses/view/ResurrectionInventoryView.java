@@ -1,12 +1,16 @@
 package me.tuskdev.horses.view;
 
 import me.tuskdev.horses.controller.CustomHorseController;
+import me.tuskdev.horses.controller.DeathHorseController;
 import me.tuskdev.horses.inventory.View;
 import me.tuskdev.horses.inventory.ViewContext;
 import me.tuskdev.horses.model.CustomHorse;
+import me.tuskdev.horses.model.DeathHorse;
+import me.tuskdev.horses.util.HorseArmor;
 import me.tuskdev.horses.util.HorseUtil;
 import me.tuskdev.horses.util.ItemBuilder;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -18,8 +22,9 @@ import java.util.UUID;
 public class ResurrectionInventoryView extends View {
 
     private final CustomHorseController customHorseController;
+    private final DeathHorseController deathHorseController;
 
-    public ResurrectionInventoryView(CustomHorseController customHorseController) {
+    public ResurrectionInventoryView(CustomHorseController customHorseController, DeathHorseController deathHorseController) {
         super(5, "Resurrection Horse");
 
         setCancelOnClick(true);
@@ -31,56 +36,56 @@ public class ResurrectionInventoryView extends View {
         }
 
         this.customHorseController = customHorseController;
+        this.deathHorseController = deathHorseController;
     }
 
     @Override
     protected void onRender(ViewContext context) {
-        Set<CustomHorse> customHorses = customHorseController.selectAll(context.getPlayer().getUniqueId());
+        Set<DeathHorse> deathHorses = deathHorseController.selectAll(context.getPlayer().getUniqueId());
 
         int slot = 11;
-        for (CustomHorse customHorse : customHorses) {
-            Entity entity = Bukkit.getEntity(customHorse.getUniqueId());
-            if (entity != null && !entity.isDead()) continue;
-
-            context.slot(slot, new ItemBuilder(Material.SKULL_ITEM, 1).durability((short) 3).owner("MHF_HORSE").displayName("§cDeath Horse").lore("", String.format("  §7Jump Level: §a%s", customHorse.getJump()), String.format("  §7Speed Level: §a%s", customHorse.getSpeed()), String.format("  §7Health Level: §a%s", customHorse.getLife()), "", "  §7Click to respawn.").build()).closeOnClick().onClick(handle -> handleResurrection(handle.getPlayer(), customHorse));
+        for (DeathHorse deathHorse : deathHorses) {
+            context.slot(slot, new ItemBuilder(Material.SKULL_ITEM, 1).durability((short) 3).owner("MHF_HORSE").displayName("§cDeath Horse").lore("", String.format("  §7Horse Name: §a%s", deathHorse.getName()), String.format("  §7Gender: §a%s", deathHorse.isMale() ? "Male ♂" : "Mare ♀"), String.format("  §7Jump Level: §a%s", deathHorse.getJump()), String.format("  §7Speed Level: §a%s", deathHorse.getSpeed()), String.format("  §7Health Level: §a%s", deathHorse.getLife()), "", "  §7Click to respawn.").build()).closeOnClick().onClick(handle -> handleResurrection(handle.getPlayer(), deathHorse));
             slot += (slot == 15 || slot == 24 ? 5 : 1);
         }
     }
 
-    void handleResurrection(Player player, CustomHorse customHorse) {
-        customHorseController.delete(customHorse.getUniqueId());
+    void handleResurrection(Player player, DeathHorse deathHorse) {
+        deathHorseController.delete(deathHorse.getId());
         player.sendMessage("§eYour horse will respawn in 10 seconds.");
 
         Location location = player.getLocation();
-        Bukkit.getScheduler().runTaskLater(getFrame().getOwner(), () -> handleSpawn(location, customHorse, player.getName()), 200L);
+        Bukkit.getScheduler().runTaskLater(getFrame().getOwner(), () -> handleSpawn(location, deathHorse, player.getUniqueId()), 200L);
     }
 
-    void handleSpawn(Location location, CustomHorse customHorse, String ownerName) {
+    void handleSpawn(Location location, DeathHorse deathHorse, UUID owner) {
         location.getWorld().strikeLightningEffect(location);
         location.getWorld().strikeLightningEffect(location);
         location.getWorld().strikeLightningEffect(location);
 
         Horse horse = (Horse) location.getWorld().spawnEntity(location, EntityType.HORSE);
         horse.setAdult();
-        horse.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(HorseUtil.getSpeed(horse) + customHorse.getSpeed()*0.05);
-        horse.getAttribute(Attribute.HORSE_JUMP_STRENGTH).setBaseValue(HorseUtil.getJump(horse) + customHorse.getJump());
-        horse.setMaxHealth(HorseUtil.getHealth(horse) + customHorse.getLife()*2);
+        horse.setColor(deathHorse.getColor());
+        horse.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(HorseUtil.getSpeed(horse) + deathHorse.getSpeed()*0.05);
+        horse.getAttribute(Attribute.HORSE_JUMP_STRENGTH).setBaseValue(HorseUtil.getJump(horse) + deathHorse.getJump());
+        horse.setMaxHealth(HorseUtil.getHealth(horse) + deathHorse.getLife()*2);
         horse.setHealth(horse.getMaxHealth());
-        horse.setCustomName(String.format("§e%s | %,.2f", HorseUtil.getName(horse), horse.getHealth()));
+        horse.getInventory().setArmor(HorseArmor.getArmorItem(deathHorse.getArmor()));
+        horse.setCustomName(String.format("§e%s | %,.2f", deathHorse.getName(), horse.getHealth()));
         horse.setCustomNameVisible(true);
 
         horse.setOwner(new AnimalTamer() {
             @Override
             public String getName() {
-                return ownerName;
+                return Bukkit.getOfflinePlayer(owner).getName();
             }
 
             @Override
             public UUID getUniqueId() {
-                return customHorse.getOwner();
+                return owner;
             }
         });
 
-        customHorseController.reinsert(horse.getUniqueId(), customHorse.getOwner(), customHorse.isMale(), customHorse.getSpeed(), customHorse.getLife(), customHorse.getJump());
+        customHorseController.reinsert(horse.getUniqueId(), owner, deathHorse.isMale(), deathHorse.getSpeed(), deathHorse.getLife(), deathHorse.getJump());
     }
 }
