@@ -73,18 +73,7 @@ public class ResurrectionInventoryView extends View {
         horse.getInventory().setArmor(HorseArmor.getArmorItem(deathHorse.getArmor()));
         horse.setCustomName(String.format("§e%s | %,.2f", deathHorse.getName(), horse.getHealth()));
         horse.setCustomNameVisible(true);
-
-        horse.setOwner(new AnimalTamer() {
-            @Override
-            public String getName() {
-                return Bukkit.getOfflinePlayer(owner).getName();
-            }
-
-            @Override
-            public UUID getUniqueId() {
-                return owner;
-            }
-        });
+        HorseUtil.setOwner(horse, owner);
 
         customHorseController.reinsert(horse.getUniqueId(), owner, deathHorse.isMale(), deathHorse.getSpeed(), deathHorse.getLife(), deathHorse.getJump());
     }

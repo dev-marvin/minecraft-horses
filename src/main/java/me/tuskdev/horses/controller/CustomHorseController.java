@@ -14,9 +14,10 @@ public class CustomHorseController {
 
     private static final String QUERY_CREATE_TABLE = "CREATE TABLE IF NOT EXISTS `horses` (`id` CHAR(36) PRIMARY KEY, `male` BOOLEAN NOT NULL, `owner` CHAR(36) NOT NULL, `speed` INT(1) DEFAULT 1, `life` INT(1) DEFAULT 1, `jump` INT(1) DEFAULT 1, `resurrection` BOOLEAN DEFAULT false);";
     private static final String QUERY_INSERT_HORSE = "INSERT INTO `horses` (`id`, `male`, `owner`) VALUES (?, ?, ?);";
-    private static final String QUERY_REINSERT_HORSE = "INSERT INTO `horses` (`id`, `male`, `owner`, `speed`, `life`, `jump`) VALUES (?, ?, ?, ?, ?, ?);";
+    private static final String QUERY_REINSERT_HORSE = "INSERT INTO `horses` (`id`, `male`, `owner`, `speed`, `life`, `jump`, `resurrection`) VALUES (?, ?, ?, ?, ?, ?, 1);";
     private static final String QUERY_SELECT_HORSE = "SELECT * FROM `horses` WHERE `id` = ?;";
     private static final String QUERY_DELETE_HORSE = "DELETE FROM `horses` WHERE `id` = ?;";
+    private static final String QUERY_UPDATE_OWNER = "UPDATE `horses` SET `owner` = ? WHERE `id` = ?;";
     private static final String QUERY_UPDATE_SPEED = "UPDATE `horses` SET `speed` = ? WHERE `id` = ?;";
     private static final String QUERY_UPDATE_LIFE = "UPDATE `horses` SET `life` = ? WHERE `id` = ?;";
     private static final String QUERY_UPDATE_JUMP = "UPDATE `horses` SET `jump` = ? WHERE `id` = ?;";
@@ -108,6 +109,10 @@ public class CustomHorseController {
                 e.printStackTrace();
             }
         });
+    }
+
+    public void updateOwner(UUID uuid, UUID owner) {
+        update(QUERY_UPDATE_OWNER, owner.toString(), uuid);
     }
 
     public void updateSpeed(UUID uuid, int speed) {

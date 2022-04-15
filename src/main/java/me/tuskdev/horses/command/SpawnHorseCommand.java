@@ -10,17 +10,18 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SpawnHorseCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
-        List<String> list = new ArrayList<>();
-        for (Horse.Color value : Horse.Color.values()) list.add(value.name());
-        return list;
+        if (strings.length <= 0) return Collections.emptyList();
+
+        return Stream.of(Horse.Color.values()).map(Horse.Color::name).filter(name -> name.startsWith(strings[0].toUpperCase())).collect(Collectors.toList());
     }
 
     @Override

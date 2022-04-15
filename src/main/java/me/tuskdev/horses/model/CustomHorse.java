@@ -6,7 +6,8 @@ import java.util.UUID;
 
 public class CustomHorse {
 
-    private final UUID uniqueId, owner;
+    private final UUID uniqueId;
+    private UUID owner;
     private final boolean male;
     private int speed = 1, life = 1, jump = 1;
     private boolean resurrection = false;
@@ -33,6 +34,10 @@ public class CustomHorse {
 
     public UUID getOwner() {
         return owner;
+    }
+
+    public void setOwner(UUID owner) {
+        this.owner = owner;
     }
 
     public boolean isMale() {

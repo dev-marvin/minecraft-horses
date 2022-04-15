@@ -2,6 +2,7 @@ package me.tuskdev.horses;
 
 import me.tuskdev.horses.cache.CustomHorseCache;
 import me.tuskdev.horses.command.SpawnHorseCommand;
+import me.tuskdev.horses.command.TransferHorseCommand;
 import me.tuskdev.horses.controller.CustomHorseController;
 import me.tuskdev.horses.controller.DeathHorseController;
 import me.tuskdev.horses.inventory.ViewFrame;
@@ -45,6 +46,10 @@ public class HorsesPlugin extends JavaPlugin {
 
         getCommand("horse").setExecutor(new SpawnHorseCommand());
         getCommand("horse").setTabCompleter(new SpawnHorseCommand());
+
+        TransferHorseCommand transferHorseCommand = new TransferHorseCommand(customHorseController);
+        getCommand("transfer").setExecutor(transferHorseCommand);
+        getCommand("transfer").setTabCompleter(transferHorseCommand);
     }
 
     @Override

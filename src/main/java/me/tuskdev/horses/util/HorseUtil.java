@@ -1,7 +1,11 @@
 package me.tuskdev.horses.util;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Horse;
+
+import java.util.UUID;
 
 public class HorseUtil {
 
@@ -59,6 +63,20 @@ public class HorseUtil {
         if (horse.getCustomName() == null || horse.getCustomName().contains("No Name")) return "No Name";
 
         return ChatColor.stripColor(horse.getCustomName().split("\\|")[0]);
+    }
+
+    public static void setOwner(Horse horse, UUID ownerId) {
+        horse.setOwner(new AnimalTamer() {
+            @Override
+            public String getName() {
+                return Bukkit.getOfflinePlayer(ownerId).getName();
+            }
+
+            @Override
+            public UUID getUniqueId() {
+                return ownerId;
+            }
+        });
     }
 
 }
