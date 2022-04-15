@@ -19,6 +19,9 @@ public class HorseNameListener implements Listener {
         ItemStack itemStack = event.getPlayer().getEquipment().getItemInMainHand();
         if (itemStack == null || itemStack.getType() != Material.NAME_TAG) return;
 
+        event.setCancelled(true);
+        event.getPlayer().getEquipment().setItemInMainHand(new ItemStack(Material.AIR));
+
         Horse horse = (Horse) event.getRightClicked();
         horse.setCustomName(String.format("§e%s | ❤ %,.2f", itemStack.getItemMeta().getDisplayName(), horse.getHealth()));
         horse.setCustomNameVisible(true);

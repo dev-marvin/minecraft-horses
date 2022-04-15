@@ -1,7 +1,7 @@
 database:
   url: ''
   username: ''
-  passwrod: ''
+  password: ''
   dataSourceProperties:
     cachePrepStmts: 'true'
     prepStmtCacheSize: '250'
