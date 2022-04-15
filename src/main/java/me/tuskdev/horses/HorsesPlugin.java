@@ -47,7 +47,7 @@ public class HorsesPlugin extends JavaPlugin {
         getCommand("horse").setExecutor(new SpawnHorseCommand());
         getCommand("horse").setTabCompleter(new SpawnHorseCommand());
 
-        TransferHorseCommand transferHorseCommand = new TransferHorseCommand(customHorseController);
+        TransferHorseCommand transferHorseCommand = new TransferHorseCommand(customHorseCache, customHorseController);
         getCommand("transfer").setExecutor(transferHorseCommand);
         getCommand("transfer").setTabCompleter(transferHorseCommand);
     }
